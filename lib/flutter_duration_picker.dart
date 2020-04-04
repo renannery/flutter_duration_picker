@@ -74,8 +74,8 @@ class _DialPainter extends CustomPainter {
     }
 
     // Draw the inner background circle
-    canvas.drawCircle(
-        centerPoint, radius * 0.88, new Paint()..color = Theme.of(context).canvasColor);
+    canvas.drawCircle(centerPoint, radius * 0.88,
+        new Paint()..color = Theme.of(context).canvasColor);
 
     // Get the offset point for an angle value of theta, and a distance of _radius
     Offset getOffsetForTheta(double theta, double _radius) {
@@ -152,7 +152,7 @@ class _DialPainter extends CustomPainter {
 
       for (TextPainter label in labels) {
         final Offset labelOffset =
-        new Offset(-label.width / 2.0, -label.height / 2.0);
+            new Offset(-label.width / 2.0, -label.height / 2.0);
 
         label.paint(
             canvas, getOffsetForTheta(labelTheta, radius - 40.0) + labelOffset);
@@ -175,9 +175,9 @@ class _DialPainter extends CustomPainter {
 
 class _Dial extends StatefulWidget {
   const _Dial(
-    {@required this.duration,
-    @required this.onChanged,
-    this.snapToMins = 1.0})
+      {@required this.duration,
+      @required this.onChanged,
+      this.snapToMins = 1.0})
       : assert(duration != null);
 
   final Duration duration;
@@ -198,7 +198,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
       vsync: this,
     );
     _thetaTween =
-    new Tween<double>(begin: _getThetaForDuration(widget.duration));
+        new Tween<double>(begin: _getThetaForDuration(widget.duration));
     _theta = _thetaTween.animate(new CurvedAnimation(
         parent: _thetaController, curve: Curves.fastOutSlowIn))
       ..addListener(() => setState(() {}));
@@ -216,7 +216,6 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
     _turningAngle = _kPiByTwo - widget.duration.inMinutes / 60.0 * _kTwoPi;
     _hours = _hourHand(_turningAngle);
     _minutes = _minuteHand(_turningAngle);
-
   }
 
   ThemeData themeData;
@@ -249,7 +248,6 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
   int _minutes = 0;
   double _turningAngle = 0.0;
 
-
   static double _nearest(double target, double a, double b) {
     return ((target - a).abs() < (target - b).abs()) ? a : b;
   }
@@ -257,7 +255,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
   void _animateTo(double targetTheta) {
     final double currentTheta = _theta.value;
     double beginTheta =
-    _nearest(targetTheta, currentTheta, currentTheta + _kTwoPi);
+        _nearest(targetTheta, currentTheta, currentTheta + _kTwoPi);
     beginTheta = _nearest(targetTheta, beginTheta, currentTheta - _kTwoPi);
     _thetaTween
       ..begin = beginTheta
@@ -382,7 +380,8 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
   }
 
   Duration _minutesToDuration(minutes) {
-    return Duration(hours: (minutes ~/ 60).toInt(), minutes: (minutes % 60.0).toInt());
+    return Duration(
+        hours: (minutes ~/ 60).toInt(), minutes: (minutes % 60.0).toInt());
   }
 
   double _angleToMinutes(double angle) {
@@ -408,8 +407,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
     // From negative to positive (in mathematical COS)
     else if (newTheta < 0.5 * math.pi && oldTheta > 1.5 * math.pi) {
       _turningAngle = _turningAngle + ((_kTwoPi - oldTheta) + newTheta);
-    }
-    else {
+    } else {
       _turningAngle = _turningAngle + (newTheta - oldTheta);
     }
   }
@@ -467,15 +465,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor;
-    switch (themeData.brightness) {
-      case Brightness.light:
-        backgroundColor = Colors.grey[200];
-        break;
-      case Brightness.dark:
-        backgroundColor = themeData.backgroundColor;
-        break;
-    }
+    Color backgroundColor = Colors.black;
 
     final ThemeData theme = Theme.of(context);
 
@@ -578,57 +568,57 @@ class _DurationPickerDialogState extends State<_DurationPickerDialog> {
 
     final Widget actions = new ButtonTheme.bar(
         child: new ButtonBar(children: <Widget>[
-          new FlatButton(
-              child: new Text(localizations.cancelButtonLabel),
-              onPressed: _handleCancel),
-          new FlatButton(
-              child: new Text(localizations.okButtonLabel), onPressed: _handleOk),
-        ]));
+      new FlatButton(
+          child: new Text(localizations.cancelButtonLabel),
+          onPressed: _handleCancel),
+      new FlatButton(
+          child: new Text(localizations.okButtonLabel), onPressed: _handleOk),
+    ]));
 
     final Dialog dialog = new Dialog(child: new OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
-          final Widget pickerAndActions = new Container(
-            color: theme.dialogBackgroundColor,
-            child: new Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                new Expanded(
-                    child:
+      final Widget pickerAndActions = new Container(
+        color: theme.dialogBackgroundColor,
+        child: new Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            new Expanded(
+                child:
                     picker), // picker grows and shrinks with the available space
-                actions,
-              ],
-            ),
-          );
+            actions,
+          ],
+        ),
+      );
 
-          assert(orientation != null);
-          switch (orientation) {
-            case Orientation.portrait:
-              return new SizedBox(
-                  width: _kDurationPickerWidthPortrait,
-                  height: _kDurationPickerHeightPortrait,
-                  child: new Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        new Expanded(
-                          child: pickerAndActions,
-                        ),
-                      ]));
-            case Orientation.landscape:
-              return new SizedBox(
-                  width: _kDurationPickerWidthLandscape,
-                  height: _kDurationPickerHeightLandscape,
-                  child: new Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        new Flexible(
-                          child: pickerAndActions,
-                        ),
-                      ]));
-          }
-          return null;
-        }));
+      assert(orientation != null);
+      switch (orientation) {
+        case Orientation.portrait:
+          return new SizedBox(
+              width: _kDurationPickerWidthPortrait,
+              height: _kDurationPickerHeightPortrait,
+              child: new Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    new Expanded(
+                      child: pickerAndActions,
+                    ),
+                  ]));
+        case Orientation.landscape:
+          return new SizedBox(
+              width: _kDurationPickerWidthLandscape,
+              height: _kDurationPickerHeightLandscape,
+              child: new Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    new Flexible(
+                      child: pickerAndActions,
+                    ),
+                  ]));
+      }
+      return null;
+    }));
 
     return new Theme(
       data: theme.copyWith(
@@ -658,16 +648,16 @@ class _DurationPickerDialogState extends State<_DurationPickerDialog> {
 /// );
 /// ```
 Future<Duration> showDurationPicker(
-  {@required BuildContext context,
-  @required Duration initialTime,
-  double snapToMins}) async {
+    {@required BuildContext context,
+    @required Duration initialTime,
+    double snapToMins}) async {
   assert(context != null);
   assert(initialTime != null);
 
   return await showDialog<Duration>(
     context: context,
-    builder: (BuildContext context) =>
-    new _DurationPickerDialog(initialTime: initialTime, snapToMins: snapToMins),
+    builder: (BuildContext context) => new _DurationPickerDialog(
+        initialTime: initialTime, snapToMins: snapToMins),
   );
 }
 
@@ -680,11 +670,11 @@ class DurationPicker extends StatelessWidget {
   final double height;
 
   DurationPicker(
-    {this.duration = const Duration(minutes: 0),
-    @required this.onChange,
-    this.snapToMins,
-    this.width,
-    this.height});
+      {this.duration = const Duration(minutes: 0),
+      @required this.onChange,
+      this.snapToMins,
+      this.width,
+      this.height});
 
   @override
   Widget build(BuildContext context) {
